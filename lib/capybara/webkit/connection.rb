@@ -41,7 +41,7 @@ module Capybara::Webkit
           response += @socket.read_nonblock(length - response.length)
         end
       rescue IO::WaitReadable
-        Thread.new { IO.select([@socket]) }.join
+        Thread.new { IO.select([@socket]) }.join if RUBY_ENGINE == 'jruby'
         retry
       end
       response
