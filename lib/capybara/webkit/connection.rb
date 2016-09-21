@@ -27,24 +27,11 @@ module Capybara::Webkit
     end
 
     def gets
-      response = ""
-      until response.match(/\n/) do
-        response += read(1)
-      end
-      response
+      @socket.gets
     end
 
     def read(length)
-      response = ""
-      begin
-        while response.length < length do
-          response += @socket.read_nonblock(length - response.length)
-        end
-      rescue IO::WaitReadable
-        Thread.new { IO.select([@socket]) }.join if RUBY_ENGINE == 'jruby'
-        retry
-      end
-      response
+      @socket.read(length)
     end
 
     def restart
